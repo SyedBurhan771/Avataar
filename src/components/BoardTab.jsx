@@ -78,9 +78,9 @@ export default function BoardTab({ project, onTaskStatusChange }) {
           <span className="text-sm font-bold text-gray-900">{doneTasks.length}</span>
         </div>
         <div className="flex-1" />
-        <div className="text-xs text-gray-500 bg-indigo-50 border border-indigo-100 rounded-xl px-3 py-1.5 font-medium">
+        {/* <div className="text-xs text-gray-500 bg-indigo-50 border border-indigo-100 rounded-xl px-3 py-1.5 font-medium">
           💡 Click any task card to advance its status
-        </div>
+        </div> */}
       </div>
 
       {/* Columns */}
