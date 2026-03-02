@@ -106,7 +106,7 @@ function Sidebar() {
           {navButton("overview", LayoutDashboard, "Overview")}
           {navButton("lifecycle", TrendingUp, "Lifecycle")}
           {navButton("general", FileText, "General Info")}
-          {navButton("financial", DollarSign, "Financial")}
+          {/* {navButton("financial", DollarSign, "Financial")} */}
           {navButton("resources", Users, "Resources")}
           {navButton("tasks", Target, "Tasks")}
           {navButton("board", Kanban, "Board")}

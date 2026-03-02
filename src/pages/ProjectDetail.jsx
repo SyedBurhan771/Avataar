@@ -21,7 +21,7 @@ const tabList = [
   { id: "overview",   label: "Overview",     icon: LayoutDashboard },
   { id: "lifecycle",  label: "Lifecycle",     icon: TrendingUp      },
   { id: "general",    label: "General Info",  icon: FileText        },
-  { id: "financial",  label: "Financial",     icon: DollarSign      },
+  // { id: "financial",  label: "Financial",     icon: DollarSign      },
   { id: "resources",  label: "Resources",     icon: Users           },
   { id: "tasks",      label: "Tasks",         icon: Target          },
   { id: "board",      label: "Board",         icon: Kanban          },
@@ -173,10 +173,10 @@ function ProjectDetail() {
           <GeneralTab project={liveProject} />
         </Section>
 
-        <Section id="financial" title="Financial" icon={DollarSign}
+        {/* <Section id="financial" title="Financial" icon={DollarSign}
           isOpen={collapsedSections.financial !== false} toggleSection={toggleSection}>
           <FinancialTab project={liveProject} />
-        </Section>
+        </Section> */}
 
         <Section id="resources" title="Resources" icon={Users}
           isOpen={collapsedSections.resources !== false} toggleSection={toggleSection}>
