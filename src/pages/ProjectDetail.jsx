@@ -11,22 +11,22 @@ import GeneralTab from "../components/GeneralTab";
 import FinancialTab from "../components/FinancialTab";
 import ResourcesTab from "../components/ResourcesTab";
 import TasksTab from "../components/TasksTab";
-import BoardTab from "../components/BoardTab";        // ← now matches the file above
+import BoardTab from "../components/BoardTab";
 import SprintsTab from "../components/SprintsTab";
 import MilestonesTab from "../components/MilestonesTab";
 
 import { projects } from "../pages/Projects";
 
 const tabList = [
-  { id: "overview", label: "Overview", icon: LayoutDashboard },
-  { id: "lifecycle", label: "Lifecycle", icon: TrendingUp },
-  { id: "general", label: "General Info", icon: FileText },
-  { id: "financial", label: "Financial", icon: DollarSign },
-  { id: "resources", label: "Resources", icon: Users },
-  { id: "tasks", label: "Tasks", icon: Target },
-  { id: "board", label: "Board", icon: Kanban },
-  { id: "sprints", label: "Sprints", icon: Zap },
-  { id: "milestones", label: "Milestones", icon: Flag },
+  { id: "overview",   label: "Overview",     icon: LayoutDashboard },
+  { id: "lifecycle",  label: "Lifecycle",     icon: TrendingUp      },
+  { id: "general",    label: "General Info",  icon: FileText        },
+  { id: "financial",  label: "Financial",     icon: DollarSign      },
+  { id: "resources",  label: "Resources",     icon: Users           },
+  { id: "tasks",      label: "Tasks",         icon: Target          },
+  { id: "board",      label: "Board",         icon: Kanban          },
+  { id: "sprints",    label: "Sprints",       icon: Zap             },
+  { id: "milestones", label: "Milestones",    icon: Flag            },
 ];
 
 function Section({ id, title, icon: Icon, children, isOpen, toggleSection }) {
@@ -60,7 +60,27 @@ function ProjectDetail() {
   const [activeSection, setActiveSection] = useState("overview");
   const [collapsedSections, setCollapsedSections] = useState({});
 
-  if (!project) return <div className="p-10 text-red-500">Project not found</div>;
+  // ── KEY FIX: live subtask state shared between BoardTab and OverviewTab ──
+  const [liveSubtasks, setLiveSubtasks] = useState(project?.subtasks || []);
+
+  // Reset when navigating to a different project
+  useEffect(() => {
+    if (project) {
+      setLiveSubtasks(project.subtasks || []);
+    }
+  }, [id]);
+
+  // Handler called by BoardTab when user clicks a task card
+  const handleTaskStatusChange = (taskId, newStatus) => {
+    setLiveSubtasks(prev =>
+      prev.map(t => t.id === taskId ? { ...t, status: newStatus } : t)
+    );
+  };
+
+  // Build liveProject — same as project but with up-to-date subtasks
+  const liveProject = project ? { ...project, subtasks: liveSubtasks } : null;
+
+  if (!liveProject) return <div className="p-10 text-red-500">Project not found</div>;
 
   const toggleSection = (sectionId) => {
     setCollapsedSections(prev => ({
@@ -73,7 +93,6 @@ function ProjectDetail() {
     setCollapsedSections(prev => ({ ...prev, [sectionId]: true }));
     setActiveSection(sectionId);
     window.history.replaceState(null, "", `#${sectionId}`);
-
     const element = document.getElementById(`section-${sectionId}`);
     if (element) {
       element.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -86,9 +105,9 @@ function ProjectDetail() {
         let visibleId = null;
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            const id = entry.target.id.replace("section-", "");
+            const sId = entry.target.id.replace("section-", "");
             if (!visibleId || entry.boundingClientRect.top < visibleId.top) {
-              visibleId = { id, top: entry.boundingClientRect.top };
+              visibleId = { id: sId, top: entry.boundingClientRect.top };
             }
           }
         });
@@ -137,41 +156,57 @@ function ProjectDetail() {
 
       {/* Scrollable Content */}
       <div ref={scrollRef} className="flex-1 overflow-y-auto p-8">
-        <Section id="overview" title="Overview" icon={LayoutDashboard} isOpen={collapsedSections.overview !== false} toggleSection={toggleSection}>
-          <OverviewTab project={project} onViewTasks={() => scrollTo("tasks")} />
+
+        <Section id="overview" title="Overview" icon={LayoutDashboard}
+          isOpen={collapsedSections.overview !== false} toggleSection={toggleSection}>
+          {/* liveProject ensures Overview reflects latest task statuses */}
+          <OverviewTab project={liveProject} onViewTasks={() => scrollTo("tasks")} />
         </Section>
 
-        <Section id="lifecycle" title="Lifecycle" icon={TrendingUp} isOpen={collapsedSections.lifecycle !== false} toggleSection={toggleSection}>
-          <LifecycleTimeline project={project} />
+        <Section id="lifecycle" title="Lifecycle" icon={TrendingUp}
+          isOpen={collapsedSections.lifecycle !== false} toggleSection={toggleSection}>
+          <LifecycleTimeline project={liveProject} />
         </Section>
 
-        <Section id="general" title="General Info" icon={FileText} isOpen={collapsedSections.general !== false} toggleSection={toggleSection}>
-          <GeneralTab project={project} />
+        <Section id="general" title="General Info" icon={FileText}
+          isOpen={collapsedSections.general !== false} toggleSection={toggleSection}>
+          <GeneralTab project={liveProject} />
         </Section>
 
-        <Section id="financial" title="Financial" icon={DollarSign} isOpen={collapsedSections.financial !== false} toggleSection={toggleSection}>
-          <FinancialTab project={project} />
+        <Section id="financial" title="Financial" icon={DollarSign}
+          isOpen={collapsedSections.financial !== false} toggleSection={toggleSection}>
+          <FinancialTab project={liveProject} />
         </Section>
 
-        <Section id="resources" title="Resources" icon={Users} isOpen={collapsedSections.resources !== false} toggleSection={toggleSection}>
-          <ResourcesTab project={project} />
+        <Section id="resources" title="Resources" icon={Users}
+          isOpen={collapsedSections.resources !== false} toggleSection={toggleSection}>
+          <ResourcesTab project={liveProject} />
         </Section>
 
-        <Section id="tasks" title="Tasks" icon={Target} isOpen={collapsedSections.tasks !== false} toggleSection={toggleSection}>
-          <TasksTab project={project} />
+        <Section id="tasks" title="Tasks" icon={Target}
+          isOpen={collapsedSections.tasks !== false} toggleSection={toggleSection}>
+          <TasksTab project={liveProject} />
         </Section>
 
-        <Section id="board" title="Board" icon={Kanban} isOpen={collapsedSections.board !== false} toggleSection={toggleSection}>
-          <BoardTab project={project} />
+        <Section id="board" title="Board" icon={Kanban}
+          isOpen={collapsedSections.board !== false} toggleSection={toggleSection}>
+          {/* onTaskStatusChange wires Board clicks back up to ProjectDetail state */}
+          <BoardTab
+            project={liveProject}
+            onTaskStatusChange={handleTaskStatusChange}
+          />
         </Section>
 
-        <Section id="sprints" title="Sprints" icon={Zap} isOpen={collapsedSections.sprints !== false} toggleSection={toggleSection}>
-          <SprintsTab project={project} />
+        <Section id="sprints" title="Sprints" icon={Zap}
+          isOpen={collapsedSections.sprints !== false} toggleSection={toggleSection}>
+          <SprintsTab project={liveProject} />
         </Section>
 
-        <Section id="milestones" title="Milestones" icon={Flag} isOpen={collapsedSections.milestones !== false} toggleSection={toggleSection}>
-          <MilestonesTab project={project} />
+        <Section id="milestones" title="Milestones" icon={Flag}
+          isOpen={collapsedSections.milestones !== false} toggleSection={toggleSection}>
+          <MilestonesTab project={liveProject} />
         </Section>
+
       </div>
     </div>
   );

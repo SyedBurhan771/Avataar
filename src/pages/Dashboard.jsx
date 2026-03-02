@@ -520,71 +520,9 @@ function Dashboard() {
       <ProjectCalendar />
 
       {/* Top Resources */}
-      <div className="bg-white rounded-lg border border-gray-200 p-6">
-        <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-          <Users className="w-5 h-5" />Top Resources
-        </h2>
-        <div className="space-y-4">
-          {sortedResources.map((resource, idx) => {
-            const badgeColor = resource.status === 'available' ? 'bg-green-100 text-green-700' :
-                              resource.status === 'partial' ? 'bg-yellow-100 text-yellow-700' :
-                              'bg-red-100 text-red-700';
-
-            const barColor = resource.allocation >= 90 ? 'bg-red-500' : 
-                            resource.allocation >= 70 ? 'bg-yellow-500' : 'bg-green-500';
-
-            return (
-              <div key={idx} className="flex items-center gap-4 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer">
-                <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
-                  {resource.name.split(' ').map(n => n[0]).join('')}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between mb-1">
-                    <div>
-                      <p className="text-sm font-semibold text-gray-900 truncate">{resource.name}</p>
-                      <p className="text-xs text-gray-500">{resource.role} • {resource.projects} project{resource.projects > 1 ? 's' : ''}</p>
-                    </div>
-                    <span className={`px-3 py-1 rounded-lg text-xs font-semibold ${badgeColor}`}>
-                      {resource.allocation}% allocated
-                    </span>
-                  </div>
-                  <div className="h-2.5 bg-gray-200 rounded-full overflow-hidden">
-                    <div className={`h-full rounded-full ${barColor}`} style={{ width: `${resource.allocation}%` }} />
-                  </div>
-                </div>
-                <ChevronRight className="w-4 h-4 text-gray-400" />
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
+      
       {/* Company Budget Overview */}
-      <div className="bg-white rounded-lg border border-gray-200 p-6">
-        <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-          <DollarSign className="w-5 h-5" />Company Budget Overview
-        </h2>
-        <div className="grid grid-cols-3 gap-4">
-          <div className="text-center p-4 bg-blue-50 rounded-lg">
-            <p className="text-sm text-gray-600 mb-1">Total Budget</p>
-            <p className="text-2xl font-bold text-blue-700">
-              ${projects.reduce((sum, p) => sum + p.budget.total, 0).toLocaleString()}
-            </p>
-          </div>
-          <div className="text-center p-4 bg-orange-50 rounded-lg">
-            <p className="text-sm text-gray-600 mb-1">Spent</p>
-            <p className="text-2xl font-bold text-orange-700">
-              ${projects.reduce((sum, p) => sum + p.budget.spent, 0).toLocaleString()}
-            </p>
-          </div>
-          <div className="text-center p-4 bg-green-50 rounded-lg">
-            <p className="text-sm text-gray-600 mb-1">Remaining</p>
-            <p className="text-2xl font-bold text-green-700">
-              ${projects.reduce((sum, p) => sum + (p.budget.total - p.budget.spent), 0).toLocaleString()}
-            </p>
-          </div>
-        </div>
-      </div>
+      
     </div>
   );
 }

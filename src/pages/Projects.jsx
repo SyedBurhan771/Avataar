@@ -47,7 +47,7 @@ export const projects = sageX3Projects.map((p) => {
     name: p.projectName || p.projectNum,
     code: p.projectNum,
     category: p.projectType || p.salesSite || 'General',
-    status: p.closeFlag === '1' ? 'Closed' : 'Open',
+    status: p.closeFlag === '1' ? 'Open' : 'Closed',
     health: 'good',
     progress: overallProgress,
     totalBudget,
@@ -130,7 +130,7 @@ function Projects() {
               </span>
             </div>
 
-            <div className="mb-4">
+            {/* <div className="mb-4">
               <div className="flex justify-between text-xs mb-1.5">
                 <span className="text-gray-600">Progress</span>
                 <span className="font-semibold text-gray-900">{project.progress}%</span>
@@ -141,7 +141,7 @@ function Projects() {
                   style={{ width: `${project.progress}%` }}
                 ></div>
               </div>
-            </div>
+            </div> */}
 
             <div className="flex items-center justify-between text-sm text-gray-600">
               <div className="flex items-center gap-2">

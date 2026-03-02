@@ -553,7 +553,7 @@ export default function ResourcesScreen() {
         </div>
 
         {/* Current Projects */}
-        <div>
+        {/* <div>
           <h3 className="text-sm font-bold text-gray-900 mb-3 flex items-center gap-2">
             <FolderOpen className="w-4 h-4" /> Current Projects ({selectedResourceData.currentProjects.length})
           </h3>
@@ -588,7 +588,7 @@ export default function ResourcesScreen() {
               </div>
             ))}
           </div>
-        </div>
+        </div> */}
 
         {/* Performance Metrics */}
         {/* <div>
